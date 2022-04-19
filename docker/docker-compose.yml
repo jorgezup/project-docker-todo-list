@@ -1,0 +1,31 @@
+version: '3'
+#adicionado network_mode no tests e comentado as variaveis de ambientes
+#baseado na explicacao gravada pelo monitor Thalles
+services:
+  todoback:
+    image: todobackend
+    restart: on-failure
+    ports:
+      - "3001:3001"
+    networks: [localnetwork]
+
+  todofront:
+    image: todofrontend
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    depends_on: [todoback]
+#    environment:
+#      REACT_APP_API_HOST: todoback
+    networks: [localnetwork]
+
+  todotests:
+    image: todotests
+    restart: on-failure
+#    environment:
+#      FRONT_HOST: todofront
+    depends_on: [todofront, todoback]
+    network_mode: host
+
+networks:
+  localnetwork:
